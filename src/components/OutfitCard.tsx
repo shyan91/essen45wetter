@@ -1,15 +1,16 @@
 import React from 'react';
 import type { OutfitSuggestion, OutfitDecision } from '../types/outfit';
-import { 
-  Shirt, 
-  Umbrella, 
-  Glasses, 
-  Sun, 
-  CloudSnow, 
+import {
+  Shirt,
+  Umbrella,
+  Glasses,
+  Sun,
+  CloudSnow,
 } from 'lucide-react';
 
 interface OutfitCardProps {
   suggestion: OutfitSuggestion;
+  minimal?: boolean;
 }
 
 // Mapping von maschinenlesbaren Keys zu UI-Texten und Icons
@@ -27,7 +28,7 @@ const LABEL_MAP: Record<string, string> = {
   'light_jacket': 'Übergangsjacke',
   'windbreaker': 'Windjacke',
   'rain_jacket': 'Regenjacke',
-  
+
   // Footwear
   'sneakers': 'Sneaker',
   'boots': 'Stiefel',
@@ -54,20 +55,22 @@ const LayerRow = ({ label, item }: { label: string, item?: OutfitDecision<any> }
   );
 };
 
-export const OutfitCard: React.FC<OutfitCardProps> = ({ suggestion }) => {
+export const OutfitCard: React.FC<OutfitCardProps> = ({ suggestion, minimal = false }) => {
   const { layers, footwear, accessories } = suggestion;
 
   return (
-    <div className="outfit-card">
-      <div className="outfit-header">
-        <div className="outfit-icon-bg">
-          <Shirt className="outfit-icon" size={24} />
+    <div className={`outfit-card ${minimal ? 'minimal' : ''}`}>
+      {!minimal && (
+        <div className="outfit-header">
+          <div className="outfit-icon-bg">
+            <Shirt className="outfit-icon" size={24} />
+          </div>
+          <div>
+            <h3 className="outfit-title">Outfit Vorschlag</h3>
+            <p className="outfit-subtitle">Basierend auf Temperatur & Wetter</p>
+          </div>
         </div>
-        <div>
-          <h3 className="outfit-title">Outfit Vorschlag</h3>
-          <p className="outfit-subtitle">Basierend auf Temperatur & Wetter</p>
-        </div>
-      </div>
+      )}
 
       <div className="layer-list">
         <LayerRow label="Basis" item={layers.base} />
@@ -81,8 +84,8 @@ export const OutfitCard: React.FC<OutfitCardProps> = ({ suggestion }) => {
           <p className="accessories-title">Empfohlenes Zubehör</p>
           <div className="accessories-grid">
             {accessories.map((acc, idx) => (
-              <span 
-                key={`${acc.key}-${idx}`} 
+              <span
+                key={`${acc.key}-${idx}`}
                 className="accessory-tag"
               >
                 {/* Dynamisches Icon basierend auf Typ */}

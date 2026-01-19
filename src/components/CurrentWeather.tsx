@@ -1,11 +1,14 @@
 import React from 'react';
 import type { WeatherData } from '../types/weather';
+import type { OutfitSuggestion } from '../types/outfit';
 import { WeatherIcon } from './WeatherIcon';
+import { OutfitCard } from './OutfitCard';
 import { Droplets, Wind, Thermometer, Umbrella, Activity, Sun, Eye, Flower2 } from 'lucide-react';
 
 interface CurrentWeatherProps {
   data: WeatherData;
   unit: 'celsius' | 'fahrenheit';
+  outfit?: OutfitSuggestion | null;
 }
 
 // Helper Funktion für AQI Interpretation
@@ -25,7 +28,7 @@ const getUvInfo = (uv: number) => {
   return { text: 'Extrem', color: '#7e22ce' };
 };
 
-export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data, unit }) => {
+export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data, unit, outfit }) => {
   const { current, daily, location } = data;
 
   const todayRainChance = daily.precipitationProbabilityMax ? daily.precipitationProbabilityMax[0] : 0;
@@ -69,21 +72,32 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data, unit }) =>
         <WeatherIcon code={current.weatherCode} size={64} color="#3b82f6" />
       </div>
 
-      <div className="main-temp-container">
-        <div className="temp-display">
-          <span className="temp-value">
-            {displayTemp(current.temperature2m)}°
-          </span>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="feels-like">
-              <Thermometer size={16} />
-              Gefühlt {displayTemp(current.apparentTemperature)}°
+      {/* New 2-Column Layout */}
+      <div className="weather-content-layout">
+
+        {/* Left Column: Temp + Outfit */}
+        <div className="left-column">
+          <div className="temp-display" style={{ marginBottom: '1rem' }}>
+            <span className="temp-value" style={{ fontSize: '5rem', lineHeight: 1 }}>
+              {displayTemp(current.temperature2m)}°
             </span>
+            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '0.5rem' }}>
+              <span className="feels-like">
+                <Thermometer size={16} />
+                Gefühlt {displayTemp(current.apparentTemperature)}°
+              </span>
+            </div>
           </div>
+
+          {outfit && (
+            <div className="integrated-outfit">
+              <OutfitCard suggestion={outfit} minimal={true} />
+            </div>
+          )}
         </div>
 
-        {/* Grid für alle Stats */}
-        <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))' }}>
+        {/* Right Column: Stats Grid */}
+        <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', alignContent: 'start' }}>
           <div className="stat-box humidity">
             <Droplets className="text-blue" size={20} />
             <div>

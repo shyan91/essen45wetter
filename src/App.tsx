@@ -4,7 +4,7 @@ import { useSettings } from './hooks/useSettings';
 import { SearchBar } from './components/SearchBar';
 import { CurrentWeather } from './components/CurrentWeather';
 import { Forecast } from './components/Forecast';
-import { OutfitCard } from './components/OutfitCard';
+
 import { WeatherSummary } from './components/WeatherSummary';
 import { PinnedWeatherCard } from './components/PinnedWeatherCard';
 import { SettingsModal } from './components/SettingsModal';
@@ -206,8 +206,7 @@ function App() {
               <div className="tab-content">
                 {activeTab === 'current' && (
                   <div className="fade-in">
-                    <CurrentWeather data={weather} unit={settings.unit} />
-                    <OutfitCard suggestion={activeOutfit} />
+                    <CurrentWeather data={weather} unit={settings.unit} outfit={activeOutfit} />
                   </div>
                 )}
                 {activeTab === 'forecast' && (

@@ -357,8 +357,47 @@ body {
   border: 1px solid var(--border-color);
   backdrop-filter: blur(8px);
   transition: transform 0.2s, border-color 0.2s;
-  min-height: 140px;
   /* Ensure uniform height perception */
+}
+
+/* New 2-Column Layout */
+.weather-content-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .weather-content-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Minimal Outfit Card Integration */
+.outfit-card.minimal {
+  background: none;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.outfit-card.minimal .layer-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  /* Very subtle separator */
+}
+
+:root.dark .outfit-card.minimal .layer-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .stat-box:hover {
@@ -412,15 +451,20 @@ body {
 }
 
 .forecast-item {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(4px);
+  background-color: var(--stat-box-bg);
+  backdrop-filter: blur(8px);
   border-radius: var(--radius-lg);
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.forecast-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-color);
 }
 
 .day-name {
