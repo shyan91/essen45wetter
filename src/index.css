@@ -3,10 +3,10 @@
   --text-dark: #1e293b;
   --text-medium: #64748b;
   --text-light: #94a3b8;
-  --bg-color: #f8fafc;
-  --card-bg: #ffffff;
-  --stat-box-bg: rgba(241, 245, 249, 0.8);
-  --border-color: #e2e8f0;
+  --bg-color: #e2e8f0;
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --stat-box-bg: rgba(241, 245, 249, 0.5);
+  --border-color: rgba(226, 232, 240, 0.6);
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --radius-lg: 1rem;
@@ -19,10 +19,10 @@
   --text-medium: #cbd5e1;
   --text-light: #94a3b8;
   --bg-color: #0f172a;
-  --card-bg: #1e293b;
-  --stat-box-bg: rgba(30, 41, 59, 0.5);
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --stat-box-bg: rgba(15, 23, 42, 0.5);
   /* Semi-transparent for glass effect */
-  --border-color: #334155;
+  --border-color: rgba(51, 65, 85, 0.6);
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
 }
@@ -149,6 +149,7 @@ body {
   background-color: var(--bg-color);
   color: var(--text-dark);
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
 /* Layout */
@@ -275,6 +276,8 @@ body {
 /* Current Weather Card */
 .weather-card {
   background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-radius: var(--radius-xl);
   padding: 2rem;
   box-shadow: var(--shadow-sm);
@@ -671,6 +674,7 @@ footer {
 /* Weather Summary Card */
 .weather-summary-card {
   background: var(--card-bg);
+  backdrop-filter: blur(12px);
   border-radius: var(--radius-xl);
   padding: 3rem 2rem;
   box-shadow: var(--shadow-sm);
@@ -770,5 +774,87 @@ footer {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Dynamic Background Animations */
+.cloud-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.cloud {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  filter: blur(20px);
+  opacity: 0.8;
+  animation: drift linear infinite;
+}
+
+/* Different cloud shapes/sizes handled via inline styles in React or additional classes */
+
+@keyframes drift {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100vw);
+  }
+}
+
+/* Sun / Moon Orb */
+.celestial-body {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  z-index: 0;
+  pointer-events: none;
+  transition: all 1s ease;
+}
+
+.sun {
+  top: -10%;
+  right: -10%;
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, rgba(253, 224, 71, 0.4) 0%, rgba(253, 224, 71, 0) 70%);
+}
+
+.moon {
+  top: 5%;
+  right: 10%;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+  filter: blur(10px);
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 3s infinite ease-in-out;
+}
+
+@keyframes twinkle {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
   }
 }

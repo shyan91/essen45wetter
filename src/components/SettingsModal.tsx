@@ -40,7 +40,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                             onClick={toggleTheme}
                         >
                             {settings.theme === 'light' ? <Sun size={20} /> : <Moon size={20} />}
-                            {settings.theme === 'light' ? 'Hell' : 'Dunkel'}
+                            {settings.theme === 'light' ? 'Hell, Statisch' : 'Dunkel, Dynamisch'}
                         </button>
                     </div>
 

@@ -8,6 +8,7 @@ import { Forecast } from './components/Forecast';
 import { WeatherSummary } from './components/WeatherSummary';
 import { PinnedWeatherCard } from './components/PinnedWeatherCard';
 import { SettingsModal } from './components/SettingsModal';
+import { WeatherBackground } from './components/WeatherBackground';
 import { calculateOutfit } from './services/outfitService';
 import { CloudLightning, Pin, PinOff, Settings } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
@@ -68,6 +69,14 @@ function App() {
         toggleTheme={toggleTheme}
         toggleUnit={toggleUnit}
       />
+
+      {/* Dynamic Background */}
+      {(showDetails ? weather : homeWeather) && settings.theme === 'dark' && (
+        <WeatherBackground
+          weatherCode={(showDetails ? weather : homeWeather)!.current.weatherCode}
+          isDay={(showDetails ? weather : homeWeather)!.current.isDay}
+        />
+      )}
 
       {/* Header Area */}
       <header className="main-header">
