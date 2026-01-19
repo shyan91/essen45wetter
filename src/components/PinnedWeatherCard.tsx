@@ -10,9 +10,10 @@ interface PinnedWeatherCardProps {
     lon: number;
     onClick: () => void;
     onRemove: (e: React.MouseEvent) => void;
+    unit: 'celsius' | 'fahrenheit';
 }
 
-export const PinnedWeatherCard: React.FC<PinnedWeatherCardProps> = ({ name, lat, lon, onClick, onRemove }) => {
+export const PinnedWeatherCard: React.FC<PinnedWeatherCardProps> = ({ name, lat, lon, onClick, onRemove, unit }) => {
     const [data, setData] = useState<WeatherData | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -47,6 +48,13 @@ export const PinnedWeatherCard: React.FC<PinnedWeatherCardProps> = ({ name, lat,
 
     if (!data) return null; // Error state silent for now
 
+    const displayTemp = (temp: number) => {
+        if (unit === 'fahrenheit') {
+            return Math.round((temp * 9 / 5) + 32);
+        }
+        return Math.round(temp);
+    };
+
     return (
         <div className="weather-summary-card" onClick={onClick} style={{ position: 'relative' }}>
             <button
@@ -74,7 +82,7 @@ export const PinnedWeatherCard: React.FC<PinnedWeatherCardProps> = ({ name, lat,
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
                 <WeatherIcon code={data.current.weatherCode} size={32} color="#3b82f6" />
-                <span style={{ fontSize: '2rem', fontWeight: 'bold' }}>{Math.round(data.current.temperature2m)}°</span>
+                <span style={{ fontSize: '2rem', fontWeight: 'bold' }}>{displayTemp(data.current.temperature2m)}°</span>
             </div>
         </div>
     );

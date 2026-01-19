@@ -1,14 +1,16 @@
 import { useWeather } from './hooks/useWeather';
 import { usePinnedLocations } from './hooks/usePinnedLocations';
+import { useSettings } from './hooks/useSettings';
 import { SearchBar } from './components/SearchBar';
 import { CurrentWeather } from './components/CurrentWeather';
 import { Forecast } from './components/Forecast';
 import { OutfitCard } from './components/OutfitCard';
 import { WeatherSummary } from './components/WeatherSummary';
 import { PinnedWeatherCard } from './components/PinnedWeatherCard';
+import { SettingsModal } from './components/SettingsModal';
 import { calculateOutfit } from './services/outfitService';
-import { CloudLightning, Pin, PinOff } from 'lucide-react';
-import React, { useMemo } from 'react';
+import { CloudLightning, Pin, PinOff, Settings } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
 
 function App() {
   // homeWeather ist immer Essen (oder der initiale Standardwert) und wird auf der Startseite angezeigt
@@ -18,8 +20,11 @@ function App() {
   const { weather, loading, error, updateWeather } = useWeather();
 
   const { pinnedLocations, addPin, removePin, isPinned } = usePinnedLocations();
+  const { settings, toggleTheme, toggleUnit } = useSettings();
+
   const [showDetails, setShowDetails] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState<'current' | 'forecast'>('current');
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleSelectCity = (lat: number, lon: number, name: string) => {
     updateWeather(lat, lon, name);
@@ -56,11 +61,27 @@ function App() {
 
   return (
     <div className="app-container">
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        settings={settings}
+        toggleTheme={toggleTheme}
+        toggleUnit={toggleUnit}
+      />
+
       {/* Header Area */}
       <header className="main-header">
-        <div className="header-content">
-          <CloudLightning size={32} strokeWidth={2.5} />
-          <h1 className="header-title">Essen45 Wetter</h1>
+        <div className="header-content" style={{ justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <CloudLightning size={32} strokeWidth={2.5} />
+            <h1 className="header-title">Essen45 Wetter</h1>
+          </div>
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: '0.5rem' }}
+          >
+            <Settings size={24} />
+          </button>
         </div>
       </header>
 
@@ -84,7 +105,7 @@ function App() {
 
         {!showDetails ? (
           /* OVERVIEW */
-          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '2rem', flex: 1 }}>
             {/* Home / Current Location Card */}
             <div>
               <h3 style={{ marginLeft: '0.5rem', marginBottom: '0.5rem', color: '#64748b', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Aktueller Ort</h3>
@@ -96,6 +117,7 @@ function App() {
                   data={homeWeather}
                   outfit={activeOutfit}
                   onClick={handleHomeClick}
+                  unit={settings.unit}
                 />
               )}
             </div>
@@ -116,6 +138,7 @@ function App() {
                         e.stopPropagation();
                         removePin(pin.name);
                       }}
+                      unit={settings.unit}
                     />
                   ))}
                 </div>
@@ -183,13 +206,13 @@ function App() {
               <div className="tab-content">
                 {activeTab === 'current' && (
                   <div className="fade-in">
-                    <CurrentWeather data={weather} />
+                    <CurrentWeather data={weather} unit={settings.unit} />
                     <OutfitCard suggestion={activeOutfit} />
                   </div>
                 )}
                 {activeTab === 'forecast' && (
                   <div className="fade-in">
-                    <Forecast data={weather} />
+                    <Forecast data={weather} unit={settings.unit} />
                   </div>
                 )}
               </div>

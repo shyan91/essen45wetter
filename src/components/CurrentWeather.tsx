@@ -5,6 +5,7 @@ import { Droplets, Wind, Thermometer, Umbrella, Activity, Sun, Eye, Flower2 } fr
 
 interface CurrentWeatherProps {
   data: WeatherData;
+  unit: 'celsius' | 'fahrenheit';
 }
 
 // Helper Funktion für AQI Interpretation
@@ -24,7 +25,7 @@ const getUvInfo = (uv: number) => {
   return { text: 'Extrem', color: '#7e22ce' };
 };
 
-export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
+export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data, unit }) => {
   const { current, daily, location } = data;
 
   const todayRainChance = daily.precipitationProbabilityMax ? daily.precipitationProbabilityMax[0] : 0;
@@ -43,6 +44,14 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
     if (current.pollen.ragweed > 10) activePollen.push('Ambrosia');
   }
   const pollenText = activePollen.length > 0 ? activePollen.join(', ') : 'Keine Belastung';
+
+  // Helper
+  const displayTemp = (temp: number) => {
+    if (unit === 'fahrenheit') {
+      return Math.round((temp * 9 / 5) + 32);
+    }
+    return Math.round(temp);
+  };
 
   return (
     <div className="weather-card">
@@ -63,12 +72,12 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
       <div className="main-temp-container">
         <div className="temp-display">
           <span className="temp-value">
-            {Math.round(current.temperature2m)}°
+            {displayTemp(current.temperature2m)}°
           </span>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <span className="feels-like">
               <Thermometer size={16} />
-              Gefühlt {Math.round(current.apparentTemperature)}°
+              Gefühlt {displayTemp(current.apparentTemperature)}°
             </span>
           </div>
         </div>
@@ -78,8 +87,8 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
           <div className="stat-box humidity">
             <Droplets className="text-blue" size={20} />
             <div>
-              <p className="stat-label text-blue">Feuchtigkeit</p>
-              <p className="stat-value" style={{ color: '#1e3a8a' }}>{current.relativeHumidity2m}%</p>
+              <p className="stat-label text-blue">Feuchtig-<br />keit</p>
+              <p className="stat-value">{current.relativeHumidity2m}%</p>
             </div>
           </div>
 
@@ -87,15 +96,15 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
             <Wind className="text-gray" size={20} />
             <div>
               <p className="stat-label text-gray">Wind</p>
-              <p className="stat-value" style={{ color: '#111827' }}>{Math.round(current.windSpeed10m)} km/h</p>
+              <p className="stat-value">{Math.round(current.windSpeed10m)} km/h</p>
             </div>
           </div>
 
           <div className="stat-box rain">
             <Umbrella className="text-blue" size={20} color="#059669" />
             <div>
-              <p className="stat-label" style={{ color: '#059669' }}>Regen</p>
-              <p className="stat-value" style={{ color: '#064e3b' }}>{todayRainChance}%</p>
+              <p className="stat-label">Regen</p>
+              <p className="stat-value">{todayRainChance}%</p>
             </div>
           </div>
 
@@ -103,8 +112,8 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
             <div className="stat-box visibility">
               <Eye size={20} color="#4b5563" />
               <div>
-                <p className="stat-label" style={{ color: '#4b5563' }}>Sichtweite</p>
-                <p className="stat-value" style={{ color: '#1f2937' }}>{current.visibility > 1000 ? `${(current.visibility / 1000).toFixed(1)} km` : `${current.visibility} m`}</p>
+                <p className="stat-label">Sicht-<br />weite</p>
+                <p className="stat-value">{current.visibility > 1000 ? `${(current.visibility / 1000).toFixed(1)} km` : `${current.visibility} m`}</p>
               </div>
             </div>
           )}
@@ -113,7 +122,7 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
             <div className="stat-box uv">
               <Sun size={20} color={uvInfo.color} />
               <div>
-                <p className="stat-label" style={{ color: uvInfo.color }}>UV-Index</p>
+                <p className="stat-label">UV-Index</p>
                 <p className="stat-value" style={{ color: uvInfo.color, fontSize: '1rem' }}>{current.uvIndex} ({uvInfo.text})</p>
               </div>
             </div>
@@ -123,7 +132,7 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
             <div className="stat-box aqi">
               <Activity size={20} color={aqiInfo.color} />
               <div>
-                <p className="stat-label" style={{ color: aqiInfo.color }}>Luftqualität</p>
+                <p className="stat-label">Luft-<br />qualität</p>
                 <p className="stat-value" style={{ color: aqiInfo.color, fontSize: '1rem' }}>{aqiInfo.text}</p>
               </div>
             </div>
@@ -133,8 +142,8 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
             <div className="stat-box pollen" style={{ gridColumn: 'span 2' }}>
               <Flower2 size={20} color="#d97706" />
               <div>
-                <p className="stat-label" style={{ color: '#d97706' }}>Pollenflug</p>
-                <p className="stat-value" style={{ color: '#92400e', fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pollenText}</p>
+                <p className="stat-label">Pollen-<br />flug</p>
+                <p className="stat-value" style={{ fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pollenText}</p>
               </div>
             </div>
           )}
