@@ -1,7 +1,7 @@
 import React from 'react';
 import type { WeatherData } from '../types/weather';
 import { WeatherIcon } from './WeatherIcon';
-import { Droplets, Wind, Thermometer, Umbrella, Activity } from 'lucide-react';
+import { Droplets, Wind, Thermometer, Umbrella, Activity, Sun, Eye, Flower2 } from 'lucide-react';
 
 interface CurrentWeatherProps {
   data: WeatherData;
@@ -16,13 +16,33 @@ const getAqiInfo = (aqi: number) => {
   return { text: 'Sehr Schlecht', color: '#dc2626' };          // red-600
 };
 
+const getUvInfo = (uv: number) => {
+  if (uv <= 2) return { text: 'Niedrig', color: '#16a34a' };
+  if (uv <= 5) return { text: 'Mäßig', color: '#ca8a04' };
+  if (uv <= 7) return { text: 'Hoch', color: '#ea580c' };
+  if (uv <= 10) return { text: 'Sehr Hoch', color: '#dc2626' };
+  return { text: 'Extrem', color: '#7e22ce' };
+};
+
 export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
   const { current, daily, location } = data;
 
   const todayRainChance = daily.precipitationProbabilityMax ? daily.precipitationProbabilityMax[0] : 0;
-  
+
   // AQI Info abrufen (Default fallback falls undefined)
   const aqiInfo = current.europeanAqi !== undefined ? getAqiInfo(current.europeanAqi) : null;
+  const uvInfo = current.uvIndex !== undefined ? getUvInfo(current.uvIndex) : null;
+
+  // Pollen string bauen
+  const activePollen = [];
+  if (current.pollen) {
+    if (current.pollen.birch > 10) activePollen.push('Birke');
+    if (current.pollen.grass > 10) activePollen.push('Gräser');
+    if (current.pollen.alder > 10) activePollen.push('Erle');
+    if (current.pollen.mugwort > 10) activePollen.push('Beifuß');
+    if (current.pollen.ragweed > 10) activePollen.push('Ambrosia');
+  }
+  const pollenText = activePollen.length > 0 ? activePollen.join(', ') : 'Keine Belastung';
 
   return (
     <div className="weather-card">
@@ -30,10 +50,10 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
         <div>
           <h2 className="location-title">{location.name}</h2>
           <p className="date-text">
-            {new Date(current.time).toLocaleDateString('de-DE', { 
-              weekday: 'long', 
-              day: 'numeric', 
-              month: 'long' 
+            {new Date(current.time).toLocaleDateString('de-DE', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long'
             })}
           </p>
         </div>
@@ -53,7 +73,7 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
           </div>
         </div>
 
-        {/* 4 Spalten Grid für alle Stats */}
+        {/* Grid für alle Stats */}
         <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))' }}>
           <div className="stat-box humidity">
             <Droplets className="text-blue" size={20} />
@@ -62,7 +82,7 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
               <p className="stat-value" style={{ color: '#1e3a8a' }}>{current.relativeHumidity2m}%</p>
             </div>
           </div>
-          
+
           <div className="stat-box wind">
             <Wind className="text-gray" size={20} />
             <div>
@@ -79,12 +99,42 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
             </div>
           </div>
 
+          {current.visibility !== undefined && (
+            <div className="stat-box visibility">
+              <Eye size={20} color="#4b5563" />
+              <div>
+                <p className="stat-label" style={{ color: '#4b5563' }}>Sichtweite</p>
+                <p className="stat-value" style={{ color: '#1f2937' }}>{current.visibility > 1000 ? `${(current.visibility / 1000).toFixed(1)} km` : `${current.visibility} m`}</p>
+              </div>
+            </div>
+          )}
+
+          {uvInfo && (
+            <div className="stat-box uv">
+              <Sun size={20} color={uvInfo.color} />
+              <div>
+                <p className="stat-label" style={{ color: uvInfo.color }}>UV-Index</p>
+                <p className="stat-value" style={{ color: uvInfo.color, fontSize: '1rem' }}>{current.uvIndex} ({uvInfo.text})</p>
+              </div>
+            </div>
+          )}
+
           {aqiInfo && (
             <div className="stat-box aqi">
               <Activity size={20} color={aqiInfo.color} />
               <div>
                 <p className="stat-label" style={{ color: aqiInfo.color }}>Luftqualität</p>
                 <p className="stat-value" style={{ color: aqiInfo.color, fontSize: '1rem' }}>{aqiInfo.text}</p>
+              </div>
+            </div>
+          )}
+
+          {current.pollen && (
+            <div className="stat-box pollen" style={{ gridColumn: 'span 2' }}>
+              <Flower2 size={20} color="#d97706" />
+              <div>
+                <p className="stat-label" style={{ color: '#d97706' }}>Pollenflug</p>
+                <p className="stat-value" style={{ color: '#92400e', fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pollenText}</p>
               </div>
             </div>
           )}

@@ -220,11 +220,13 @@ body {
 }
 
 .stat-box.humidity {
-  background-color: #eff6ff; /* blue-50 */
+  background-color: #eff6ff;
+  /* blue-50 */
 }
 
 .stat-box.wind {
-  background-color: #f8fafc; /* slate-50 */
+  background-color: #f8fafc;
+  /* slate-50 */
 }
 
 .stat-label {
@@ -239,8 +241,13 @@ body {
   font-weight: 700;
 }
 
-.text-blue { color: var(--primary-color); }
-.text-gray { color: var(--text-medium); }
+.text-blue {
+  color: var(--primary-color);
+}
+
+.text-gray {
+  color: var(--text-medium);
+}
 
 /* Forecast */
 .forecast-container {
@@ -291,7 +298,9 @@ body {
 }
 
 @media (min-width: 640px) {
-  .forecast-desc { display: block; }
+  .forecast-desc {
+    display: block;
+  }
 }
 
 .temp-range {
@@ -301,15 +310,22 @@ body {
   justify-content: flex-end;
 }
 
-.temp-high { font-weight: 700; }
-.temp-low { color: var(--text-light); }
+.temp-high {
+  font-weight: 700;
+}
+
+.temp-low {
+  color: var(--text-light);
+}
 
 .stat-box.rain {
-  background-color: #f0fdf4; /* green-50 */
+  background-color: #f0fdf4;
+  /* green-50 */
 }
 
 .stat-box.aqi {
-  background-color: #fff1f2; /* rose-50 */
+  background-color: #fff1f2;
+  /* rose-50 */
 }
 
 .rain-chance {
@@ -317,9 +333,11 @@ body {
   align-items: center;
   gap: 0.25rem;
   font-size: 0.75rem;
-  color: #3b82f6; /* blue-500 */
+  color: #3b82f6;
+  /* blue-500 */
   font-weight: 600;
-  background-color: #eff6ff; /* blue-50 */
+  background-color: #eff6ff;
+  /* blue-50 */
   padding: 0.25rem 0.5rem;
   border-radius: 999px;
   margin-left: 0.5rem;
@@ -345,7 +363,8 @@ body {
 }
 
 .outfit-icon-bg {
-  background-color: #e0e7ff; /* indigo-50 */
+  background-color: #e0e7ff;
+  /* indigo-50 */
   padding: 0.75rem;
   border-radius: var(--radius-lg);
   display: flex;
@@ -354,7 +373,8 @@ body {
 }
 
 .outfit-icon {
-  color: #4f46e5; /* indigo-600 */
+  color: #4f46e5;
+  /* indigo-600 */
 }
 
 .outfit-title {
@@ -427,11 +447,14 @@ body {
   gap: 0.5rem;
   padding: 0.375rem 0.75rem;
   border-radius: 999px;
-  background-color: #e0e7ff; /* indigo-50 */
-  color: #4338ca; /* indigo-700 */
+  background-color: #e0e7ff;
+  /* indigo-50 */
+  color: #4338ca;
+  /* indigo-700 */
   font-size: 0.875rem;
   font-weight: 500;
-  border: 1px solid #c7d2fe; /* indigo-200 */
+  border: 1px solid #c7d2fe;
+  /* indigo-200 */
 }
 
 /* Utilities */
@@ -446,7 +469,9 @@ body {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .error-box {
@@ -458,10 +483,114 @@ body {
   width: 100%;
 }
 
+
 footer {
   margin-top: 5rem;
   text-align: center;
   color: var(--text-light);
   font-size: 0.875rem;
   padding-bottom: 2rem;
+}
+
+/* Weather Summary Card */
+.weather-summary-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  padding: 3rem 2rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.weather-summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+}
+
+/* Tabs */
+.details-container {
+  width: 100%;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: var(--text-medium);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.back-button:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-medium);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s;
+}
+
+.tab-button.active {
+  color: var(--primary-color);
+  background: #eff6ff;
+  font-weight: 700;
+}
+
+.tab-button:hover:not(.active) {
+  background: #f1f5f9;
+}
+
+/* Animations */
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
