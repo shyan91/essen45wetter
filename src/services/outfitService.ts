@@ -1,5 +1,5 @@
 import type { WeatherData } from '../types/weather';
-import type { OutfitSuggestion, OutfitDecision, LayerLevel, FootwearCategory, AccessoryType } from '../types/outfit';
+import type { OutfitSuggestion } from '../types/outfit';
 
 export function calculateOutfit(weather: WeatherData): OutfitSuggestion {
   const temp = weather.current.apparentTemperature;
