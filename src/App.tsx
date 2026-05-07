@@ -14,11 +14,12 @@ import { CloudLightning, Pin, PinOff, Settings } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 
 function App() {
-  // homeWeather ist immer Essen (oder der initiale Standardwert) und wird auf der Startseite angezeigt
+  // homeWeather initialisiert sich über den IP-Standort
+
   const { weather: homeWeather, loading: homeLoading } = useWeather();
 
   // activeWeather ist das Wetter, das in der Detailansicht angezeigt wird (Suche, Pin oder Klick auf Home)
-  const { weather, loading, error, updateWeather } = useWeather();
+  const { weather, loading, error, updateWeather } = useWeather(undefined, undefined, undefined, true);
 
   const { pinnedLocations, addPin, removePin, isPinned } = usePinnedLocations();
   const { settings, toggleTheme, toggleUnit } = useSettings();
@@ -83,7 +84,7 @@ function App() {
         <div className="header-content" style={{ justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <CloudLightning size={32} strokeWidth={2.5} />
-            <h1 className="header-title">Essen45 Wetter</h1>
+            <h1 className="header-title">Lokales Wetter</h1>
           </div>
           <button
             onClick={() => setIsSettingsOpen(true)}
@@ -230,7 +231,7 @@ function App() {
       </main>
 
       <footer>
-        <p>© {new Date().getFullYear()} Essen45 Wetter • Daten von Open-Meteo</p>
+        <p>© {new Date().getFullYear()} Lokales Wetter • Daten von Open-Meteo</p>
       </footer>
     </div>
   );
