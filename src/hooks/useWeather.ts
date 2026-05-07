@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import type { WeatherData } from '../types/weather';
 import { fetchWeather } from '../services/weatherService';
+import { fetchUserLocation } from '../services/locationService';
 
-export function useWeather(lat: number = 51.4556, lon: number = 7.0116, name: string = 'Essen') {
+export function useWeather(initLat?: number, initLon?: number, initName?: string, skipInit: boolean = false) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(!skipInit);
   const [error, setError] = useState<string | null>(null);
 
   const updateWeather = async (newLat: number, newLon: number, newName: string) => {
@@ -21,8 +22,20 @@ export function useWeather(lat: number = 51.4556, lon: number = 7.0116, name: st
   };
 
   useEffect(() => {
-    updateWeather(lat, lon, name);
-  }, []);
+    if (skipInit) return;
+
+    const initializeWeather = async () => {
+      if (initLat !== undefined && initLon !== undefined && initName !== undefined) {
+        await updateWeather(initLat, initLon, initName);
+      } else {
+        setLoading(true);
+        const loc = await fetchUserLocation();
+        await updateWeather(loc.latitude, loc.longitude, loc.city);
+      }
+    };
+
+    initializeWeather();
+  }, [initLat, initLon, initName, skipInit]);
 
   return { weather, loading, error, updateWeather };
 }
