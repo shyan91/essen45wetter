@@ -8,7 +8,17 @@ export interface WeatherData {
     precipitation: number;
     weatherCode: number;
     windSpeed10m: number;
-    europeanAqi?: number; // Neu: Luftqualität (optional, falls API mal ausfällt)
+    europeanAqi?: number;
+    uvIndex?: number;
+    visibility?: number;
+    pollen?: {
+      alder: number;
+      birch: number;
+      grass: number;
+      mugwort: number;
+      olive: number;
+      ragweed: number;
+    };
   };
   daily: {
     time: string[];

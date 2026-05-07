@@ -7,7 +7,7 @@ export async function fetchWeather(lat: number, lon: number, cityName: string): 
   const params = new URLSearchParams({
     latitude: lat.toString(),
     longitude: lon.toString(),
-    current: 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m',
+    current: 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m,visibility',
     daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset',
     timezone: 'auto'
   });
@@ -15,7 +15,7 @@ export async function fetchWeather(lat: number, lon: number, cityName: string): 
   const aqiParams = new URLSearchParams({
     latitude: lat.toString(),
     longitude: lon.toString(),
-    current: 'european_aqi'
+    current: 'european_aqi,uv_index,alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen'
   });
 
   // Parallele Anfragen für maximale Geschwindigkeit
@@ -23,7 +23,7 @@ export async function fetchWeather(lat: number, lon: number, cityName: string): 
     fetch(`${WEATHER_API_URL}?${params.toString()}`),
     fetch(`${AIR_QUALITY_API_URL}?${aqiParams.toString()}`)
   ]);
-  
+
   if (!weatherRes.ok) {
     throw new Error('Wetterdaten konnten nicht geladen werden.');
   }
@@ -46,7 +46,17 @@ export async function fetchWeather(lat: number, lon: number, cityName: string): 
       precipitation: data.current.precipitation,
       weatherCode: data.current.weather_code,
       windSpeed10m: data.current.wind_speed_10m,
-      europeanAqi: aqiData?.current?.european_aqi
+      visibility: data.current.visibility,
+      europeanAqi: aqiData?.current?.european_aqi,
+      uvIndex: aqiData?.current?.uv_index,
+      pollen: aqiData?.current ? {
+        alder: aqiData.current.alder_pollen,
+        birch: aqiData.current.birch_pollen,
+        grass: aqiData.current.grass_pollen,
+        mugwort: aqiData.current.mugwort_pollen,
+        olive: aqiData.current.olive_pollen,
+        ragweed: aqiData.current.ragweed_pollen
+      } : undefined
     },
     daily: {
       time: data.daily.time,
@@ -67,7 +77,7 @@ export async function fetchWeather(lat: number, lon: number, cityName: string): 
 
 export async function searchCity(query: string) {
   const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=de&format=json`);
-  
+
   if (!response.ok) {
     throw new Error('Suche fehlgeschlagen.');
   }

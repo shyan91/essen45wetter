@@ -1,5 +1,5 @@
 import type { WeatherData } from '../types/weather';
-import type { OutfitSuggestion, OutfitDecision, LayerLevel, FootwearCategory, AccessoryType } from '../types/outfit';
+import type { OutfitSuggestion } from '../types/outfit';
 
 export function calculateOutfit(weather: WeatherData): OutfitSuggestion {
   const temp = weather.current.apparentTemperature;
@@ -26,7 +26,7 @@ export function calculateOutfit(weather: WeatherData): OutfitSuggestion {
     suggestion.layers.mid = { id: 'mid', key: 'fleece_sweater', reasonCode: 'insulation_needed' };
     suggestion.layers.outer = { id: 'outer', key: 'heavy_parka', reasonCode: 'protection_cold' };
     suggestion.footwear = { id: 'winter_boots', key: 'winter_boots', reasonCode: 'keep_warm' };
-    
+
     suggestion.accessories.push(
       { id: 'winter_hat', key: 'beanie', reasonCode: 'heat_loss_head' },
       { id: 'gloves', key: 'gloves', reasonCode: 'extremities_cold' },
@@ -60,12 +60,12 @@ export function calculateOutfit(weather: WeatherData): OutfitSuggestion {
   // 2. Regen-Overrides
   if (isRaining) {
     suggestion.metadata!.primaryFactor = 'precipitation';
-    
+
     // Wenn es nicht extrem kalt ist, ersetzen wir die äußere Schicht durch Regenjacke
     if (temp > 5) {
       suggestion.layers.outer = { id: 'outer', key: 'rain_jacket', reasonCode: 'waterproof' };
     }
-    
+
     suggestion.footwear = { id: 'rain_boots', key: 'rain_boots', reasonCode: 'waterproof_feet' };
     suggestion.accessories.push({ id: 'umbrella', key: 'umbrella', reasonCode: 'stay_dry' });
   }
@@ -77,3 +77,34 @@ export function calculateOutfit(weather: WeatherData): OutfitSuggestion {
 
   return suggestion;
 }
+
+export const translations: Record<string, string> = {
+  // Layers
+  t_shirt: 'T-Shirt',
+  long_sleeve: 'Langarmshirt',
+  thermal_underwear: 'Thermowäsche',
+  tank_top: 'Tank Top',
+  fleece_sweater: 'Fleece-Pullover',
+  sweater: 'Pullover',
+  hoodie: 'Hoodie',
+  heavy_parka: 'Dicker Parka',
+  winter_coat: 'Wintermantel',
+  light_jacket: 'Leichte Jacke',
+  windbreaker: 'Windbreaker',
+  rain_jacket: 'Regenjacke',
+
+  // Footwear
+  sneakers: 'Sneaker',
+  boots: 'Stiefel',
+  winter_boots: 'Winterstiefel',
+  rain_boots: 'Gummistiefel',
+  sandals: 'Sandalen',
+
+  // Accessories
+  beanie: 'Mütze',
+  gloves: 'Handschuhe',
+  scarf: 'Schal',
+  cap: 'Cappy',
+  sunglasses: 'Sonnenbrille',
+  umbrella: 'Regenschirm'
+};
